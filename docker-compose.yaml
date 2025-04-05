@@ -1,0 +1,30 @@
+services:
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: test
+      MYSQL_USER: root
+      MYSQL_PASSWORD: admin
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
+      - ./mysqlVolume:/var/lib/mysql
+      - ./mysqlConfig:/etc/mysql
+    ports:
+      - 3306:3306
+
+  docker_python:
+    build:
+      context: .
+    ports:
+      - 3000:5000
+    depends_on:
+      - db
+
+volumes:
+  mysqlVolume
+  mysqlConfig
+    
+networks:
+  mynet:
+    driver: bridge
